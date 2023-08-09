@@ -1,34 +1,25 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
-const cors = require("cors");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
 
-app.post("/events", async (req, res) => {
-  const { type, data } = req.body;
-  console.log(type);
-  console.log(data);
-  if (type === "CommentCreated") {
-    await axios.post("http://localhost:4001/events", { type, ...data });
-  }
-  if (type === "PostCreated") {
-    await axios.post("http://localhost:4000/events", { type, ...data });
-  }
+app.post("/events", (req, res) => {
+  const event = req.body;
 
+  axios.post("http://localhost:4000/events", event).catch((err) => {
+    console.log(err.message);
+  });
+  axios.post("http://localhost:4001/events", event).catch((err) => {
+    console.log(err.message);
+  });
+  axios.post("http://localhost:4002/events", event).catch((err) => {
+    console.log(err.message);
+  });
   res.send({ status: "OK" });
 });
 
-app.listen(4005, (error) => {
-  if (error) {
-    console.log(error);
-    return;
-  }
-  console.log(`listen on port 4005`);
+app.listen(4005, () => {
+  console.log("Listening on 4005");
 });
