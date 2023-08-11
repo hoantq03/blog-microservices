@@ -9,22 +9,25 @@ app.use(cors());
 
 const posts = {};
 
-const handleEvent = (type, data, status) => {
+const handleEvent = (type, data) => {
   if (type === "PostCreated") {
     const { id, title } = data;
+
     posts[id] = { id, title, comments: [] };
   }
 
   if (type === "CommentCreated") {
-    const { id, content, postId } = data;
+    const { id, content, postId, status } = data;
+
     const post = posts[postId];
     post.comments.push({ id, content, status });
   }
 
   if (type === "CommentUpdated") {
-    const { id, content, postId } = data;
+    const { id, content, postId, status } = data;
 
-    const comment = posts[postId].comments.find((comment) => {
+    const post = posts[postId];
+    const comment = post.comments.find((comment) => {
       return comment.id === id;
     });
 
@@ -38,8 +41,9 @@ app.get("/posts", (req, res) => {
 });
 
 app.post("/events", (req, res) => {
-  const { type, data, status } = req.body;
-  handleEvent(type, data, status);
+  const { type, data } = req.body;
+  console.log(req.body);
+  handleEvent(type, data);
 
   res.send({});
 });
