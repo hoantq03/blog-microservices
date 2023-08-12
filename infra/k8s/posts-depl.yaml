@@ -14,4 +14,5 @@ spec:
     spec:
       containers:
         - name: posts
-          image: hoantq/posts:0.0.1
+          image: hoantq/posts:latest
+          imagePullPolicy: Never

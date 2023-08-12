@@ -11,6 +11,10 @@ app.use(cors());
 const posts = {};
 
 app.get("/posts", (req, res) => {
+  posts[0] = {
+    id: "0",
+    title: "init",
+  };
   res.send(posts);
 });
 
